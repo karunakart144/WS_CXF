@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:ns0="http://schemas.microsoft.com/Message" xmlns:q1="http://RBCFG.WMS0.DocumentServices/ServiceMessage" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://RBCFG.WMS0.DocumentServices/ServiceMessage/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://RBCFG.WMS0.DocumentServices/ServiceMessage/">
+    <wsp:Policy xmlns:wsp="http://www.w3.org/ns/ws-policy" wsu:Id="CustomBinding_ITwoWayAsync_policy">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <wsoma:OptimizedMimeSerialization xmlns:wsoma="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization"/>
+                <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                    <wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+                        <sp:TransportToken>
+                            <wsp:Policy>
+                                <sp:HttpsToken RequireClientCertificate="true"/>
+                            </wsp:Policy>
+                        </sp:TransportToken>
+                        <sp:AlgorithmSuite>
+                            <wsp:Policy>
+                                <sp:Basic256/>
+                            </wsp:Policy>
+                        </sp:AlgorithmSuite>
+                        <sp:Layout>
+                            <wsp:Policy>
+                                <sp:Strict/>
+                            </wsp:Policy>
+                        </sp:Layout>
+                    </wsp:Policy>
+                </sp:TransportBinding>
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+    <wsdl:types>
+        <xs:schema xmlns:tns="http://schemas.microsoft.com/Message" xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/Message">
+            <xs:complexType name="MessageBody">
+                <xs:sequence>
+                    <xs:any maxOccurs="unbounded" minOccurs="0" namespace="##any"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns="http://RBCFG.WMS0.DocumentServices/ServiceMessage" xmlns:b="http://schemas.microsoft.com/BizTalk/2003" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://RBCFG.WMS0.DocumentServices/ServiceMessage">
+            <xs:annotation>
+                <xs:appinfo>
+                    <schemaInfo xmlns="http://schemas.microsoft.com/BizTalk/2003" root_reference="DocumentServices"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="UserAuthRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="UserID" type="xs:string"/>
+                        <xs:element minOccurs="0" name="UserRole" type="xs:string"/>
+                        <xs:element ref="Application"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Application">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="ApplicationCode" type="xs:string"/>
+                        <xs:element name="LanguageCode" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="UserAuthResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="TransactionResult"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="TransactionResult">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="ResultCode"/>
+                        <xs:element ref="ResultDescription"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ResultDescription" type="xs:string"/>
+            <xs:element name="ResultCode" type="xs:int"/>
+            <xs:element name="objectMimeType">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="image/tiff"/>
+                        <xs:enumeration value="application/pdf"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="objectContent" type="xs:base64Binary" xmime:expectedContentTypes="application/octet-stream,application/pdf,image/tiff"/>
+            <xs:element name="MetaDataFields">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" ref="MetaDataField"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="MetaDataField">
+                <xs:complexType>
+                    <xs:attribute name="Value" type="xs:string" use="required"/>
+                    <xs:attribute name="Name" type="xs:string" use="required"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="IncludeDocumentImage" type="xs:boolean"/>
+            <xs:element name="Documents">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Document"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="URL" type="xs:string"/>
+            <xs:element name="TransactionGUID" type="xs:string"/>
+            <xs:element name="TransactionType" type="xs:string"/>
+            <xs:element name="TransactionDescription" type="xs:string"/>
+            <xs:element name="TransactionDate" type="xs:string"/>
+            <xs:element name="TransactionTime" type="xs:string"/>
+            <xs:element name="Document">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" ref="MetaDataFields"/>
+                        <xs:element minOccurs="0" ref="Content"/>
+                        <xs:element minOccurs="0" ref="URL"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Content">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="objectMimeType"/>
+                        <xs:element ref="objectContent"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Packages">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" ref="Package"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Package">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="Recipients"/>
+                        <xs:element ref="Documents"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Recipients">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" ref="Recipient"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Recipient">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="Name"/>
+                        <xs:element ref="TransmittalMethod"/>
+                        <xs:element minOccurs="0" ref="FaxNumber"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Name" type="xs:string"/>
+            <xs:element name="TransmittalMethod">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="FAX"/>
+                        <xs:enumeration value="NETWORKGATEWAY"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="FaxNumber" type="xs:string"/>
+            <xs:element name="DocumentServiceRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="TransactionGUID"/>
+                        <xs:element ref="TransactionType"/>
+                        <xs:element ref="TransactionDescription"/>
+                        <xs:element ref="TransactionDate"/>
+                        <xs:element ref="TransactionTime"/>
+                        <xs:element minOccurs="0" ref="IncludeDocumentImage"/>
+                        <xs:element minOccurs="0" ref="MetaDataFields"/>
+                        <xs:element minOccurs="0" ref="Content"/>
+                        <xs:element minOccurs="0" ref="Packages"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="DocumentServiceResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="TransactionGUID"/>
+                        <xs:element ref="TransactionResult"/>
+                        <xs:element minOccurs="0" ref="IncludeDocumentImage"/>
+                        <xs:element minOccurs="0" ref="Documents"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="DocumentServices">
+                <xs:annotation/>
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" ref="UserAuthRequest"/>
+                            <xs:element minOccurs="0" ref="DocumentServiceRequest"/>
+                        </xs:sequence>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" ref="UserAuthResponse"/>
+                            <xs:element minOccurs="0" ref="DocumentServiceResponse"/>
+                        </xs:sequence>
+                    </xs:choice>
+                    <xs:attribute name="Version" type="xs:string"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="WMS0_DS_WebService_BT_Orc_Core_ProcessDocumentService_PortRcvSndDSMessage_OpRcvSndDSMessage_InputMessage">
+        <wsdl:part element="q1:DocumentServices" name="part"/>
+    </wsdl:message>
+    <wsdl:message name="WMS0_DS_WebService_BT_Orc_Core_ProcessDocumentService_PortRcvSndDSMessage_OpRcvSndDSMessage_OutputMessage">
+        <wsdl:part element="q1:DocumentServices" name="part"/>
+    </wsdl:message>
+    <!-- <wsdl:portType name="BizTalkServiceInstancePortType"> -->
+    
+    <wsdl:portType name="WMS0_DS_WebService_BT_Orc_Core_ProcessDocumentService_PortRcvSndDSMessage">
+        <wsdl:operation name="OpRcvSndDSMessage">
+            <wsdl:documentation>operation &amp;quot;OpRcvSndDSMessage&amp;quot;</wsdl:documentation>
+            <wsdl:input message="tns:WMS0_DS_WebService_BT_Orc_Core_ProcessDocumentService_PortRcvSndDSMessage_OpRcvSndDSMessage_InputMessage" wsaw:Action="OpRcvSndDSMessage"/>
+            <wsdl:output message="tns:WMS0_DS_WebService_BT_Orc_Core_ProcessDocumentService_PortRcvSndDSMessage_OpRcvSndDSMessage_OutputMessage" wsaw:Action="http://RBCFG.WMS0.DocumentServices/ServiceMessage/WMS0_DS_WebService_BT_Orc_Core_ProcessDocumentService_PortRcvSndDSMessage/OpRcvSndDSMessageResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <!-- <wsdl:binding name="CustomBinding_ITwoWayAsync" type="tns:BizTalkServiceInstancePortType"> -->
+    
+    <wsdl:binding name="CustomBinding_ITwoWayAsync" type="tns:WMS0_DS_WebService_BT_Orc_Core_ProcessDocumentService_PortRcvSndDSMessage">
+        <!-- <wsp:PolicyReference xmlns:wsp="http://www.w3.org/ns/ws-policy" URI="#CustomBinding_ITwoWayAsync_policy"/> -->
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="OpRcvSndDSMessage">
+            <soap:operation soapAction="OpRcvSndDSMessage" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="BizTalkServiceInstance">
+        <wsdl:port binding="tns:CustomBinding_ITwoWayAsync" name="CustomBinding_ITwoWayAsync">
+            <soap:address location="http://10.211.38.145:8999/WS_CXF_Service/services"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
